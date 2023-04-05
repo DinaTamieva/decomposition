@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	repository := repository.NewMemStorage()
-	app := app.New(repository)
-	app.Run()
+	storage := repository.NewMemStorage()
+	instanceApp := app.New(storage)
+	instanceApp.Run()
 }

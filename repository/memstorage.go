@@ -19,8 +19,9 @@ func NewMemStorage() *MemStorage {
 }
 
 func (ms *MemStorage) GetAll() ([]*entities.Student, error) {
-	var students []*entities.Student
-	for _, v := range ms.studentsByName {
+	var v *entities.Student
+	students := make([]*entities.Student, 0, len(ms.studentsByName))
+	for _, v = range ms.studentsByName {
 		students = append(students, v)
 	}
 	return students, nil

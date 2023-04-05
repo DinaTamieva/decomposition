@@ -31,24 +31,32 @@ func (app *App) Run() {
 }
 
 func (app *App) enteringStudents() {
+	fmt.Println("Enter student's name, age, and grade separated by spaces or type 'exit' to quit:")
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Split(bufio.ScanLines)
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := scanner.Text() // получаем строку
+		if line == "exit" {
+			fmt.Println("Final students data:")
+			app.printStudents()
+		} else {
+			fmt.Println()
+			fmt.Println("Enter student's name, age, and grade separated by spaces or type 'exit' to quit:")
+			student, err := populate(line)
 
-		student, err := populate(line)
-		if err != nil {
-			fmt.Println("Неверные данные", err)
-			continue
+			if err != nil {
+				fmt.Println("Неверные данные", err)
+				continue
+			}
+
+			err = app.storage.Put(student)
+			if err != nil {
+				fmt.Println("Не удалось зачислить студента на курс:", err)
+				continue
+
+			}
+			fmt.Println("Зачислен студент:", student)
 		}
-
-		err = app.storage.Put(student)
-		if err != nil {
-			fmt.Println("Не удалось зачислить студента на курс:", err)
-			continue
-		}
-		fmt.Println("Зачисленстудент:", student)
-
 	}
 
 	if err := scanner.Err(); err != nil {
